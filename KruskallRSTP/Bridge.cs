@@ -7,7 +7,7 @@ namespace KruskallRSTP {
     class Bridge {
         public int BridgeId {get; private set;}
         public bool IsEnabled { get; set; }
-        List<Port> ports;
+        public List<Port> ports { get; set; }
 
         public Bridge(int bridgeId, List<Port> ports) {
             ports = new List<Port>();

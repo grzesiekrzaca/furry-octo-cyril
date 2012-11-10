@@ -4,3 +4,7 @@ obj
 
 # mstest test results
 TestResults
+/KruskallRSTP.sln
+/KruskallRSTP.suo
+/KruskallRSTP/KruskallRSTP.csproj.user
+/KruskallRSTP/KruskallRSTP.csproj
