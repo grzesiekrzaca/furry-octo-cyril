@@ -3,20 +3,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Window1" Height="300" Width="300">
     <StackPanel Orientation="Horizontal">
-        <ListView
+        <TreeView
             Name="bridgesListView" Width="251">
-            <ListView.ItemTemplate>
+            <TreeView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding IsEnabled}"/>
                         <TextBlock Text="{Binding BridgeId}" />
-                        <ListView ItemsSource="{Binding ports}">
-                           <!-- <TextBlock Text="{Binding ports.Time}" /> -->
-                     
+                        <ListView>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Time}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </StackPanel>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </TreeView.ItemTemplate>
+        </TreeView>
     </StackPanel>
 </Window>
