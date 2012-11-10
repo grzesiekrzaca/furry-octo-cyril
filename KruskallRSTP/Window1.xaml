@@ -10,6 +10,9 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding IsEnabled}"/>
                         <TextBlock Text="{Binding BridgeId}" />
+                        <TextBlock Text="{Binding BridgeId}" />
+                        <TextBlock Text="{Binding BridgeId}" />
+                        
                         <ListView ItemsSource="{Binding ports}">
                            <!-- <TextBlock Text="{Binding ports.Time}" /> -->
                      
