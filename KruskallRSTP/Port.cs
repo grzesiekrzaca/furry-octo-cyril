@@ -7,7 +7,7 @@ namespace KruskallRSTP {
     class Port {
         public MAC mac { get; private set; }
         public Port destinationPort { get; private set; }
-        public int Time { get; private set; }
+        public int time { get; private set; }
 
         private Queue<BPDU> bpdus;
 
@@ -15,9 +15,9 @@ namespace KruskallRSTP {
             this.mac = mac;
             this.destinationPort = destinationPort;
             if (destinationPort != null) {
-                this.Time = time;
+                this.time = time;
             } else {
-                this.Time = int.MaxValue;
+                this.time = int.MaxValue;
             }
 
             bpdus = new Queue<BPDU>();

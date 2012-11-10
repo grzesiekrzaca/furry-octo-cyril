@@ -13,5 +13,9 @@ namespace KruskallRSTP {
             this.second = second;
             this.third = third;
         }
+
+        public override string ToString() {
+            return first.ToString("0000") + ":" + second.ToString("0000") + ":" + third.ToString("0000");
+        }
     }
 }

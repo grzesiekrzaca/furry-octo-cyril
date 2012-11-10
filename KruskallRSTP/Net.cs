@@ -12,7 +12,9 @@ namespace KruskallRSTP {
             Bridges = new List<Bridge>();
             for (int i = 0; i < NUMBER_OF_BRIDGES; i++) {
                 List<Port> ports = new List<Port>();
-                ports.Add(new Port(new MAC(0,0,i),null,0));
+                for (int j = 0; j < 10; j++) {
+                    ports.Add(new Port(new MAC(0, i, j), null, 0));
+                }
                 Bridges.Add(new Bridge(i,ports));
                 
             }

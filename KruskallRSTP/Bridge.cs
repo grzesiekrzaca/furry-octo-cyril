@@ -5,15 +5,15 @@ using System.Text;
 
 namespace KruskallRSTP {
     class Bridge {
-        public int BridgeId {get; private set;}
-        public bool IsEnabled { get; set; }
-        public List<Port> ports { get; set; }
+        public int bridgeId {get; private set;}
+        public bool isEnabled { get; set; }
+        public List<Port> ports { get; private set; }
 
         public Bridge(int bridgeId, List<Port> ports) {
-            ports = new List<Port>();
-            this.BridgeId = bridgeId;
             this.ports = ports;
-            this.IsEnabled = false;
+            this.bridgeId = bridgeId;
+            this.ports = ports;
+            this.isEnabled = false;
         }
 
         private class TreeVertex {
