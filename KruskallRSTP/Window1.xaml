@@ -40,5 +40,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Canvas Name="drawCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </StackPanel>
 </Window>
