@@ -35,7 +35,7 @@ namespace KruskallRSTP {
             foreach (DynamicEllipse ellipse1 in ellipses) {
                 foreach (DynamicEllipse ellipse2 in ellipses) {
                     if (ellipse1 != ellipse2) {
-                        drawLine(ellipse1, ellipse2, false);
+                        drawLine(ellipse1, ellipse2);
                     }
                 }
             }
@@ -53,18 +53,10 @@ namespace KruskallRSTP {
             drawCanvas.Children.Add(ellipse.ellipse);
         }
 
-        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2, bool isEnabled) {
-            Line line = new Line();
-            line.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            line.X1 = ellipse1.X + (int)(DynamicEllipse.ELLIPSE_DIMM/2);
-            line.X2 = ellipse2.X + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
-            line.Y1 = ellipse1.Y + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
-            line.Y2 = ellipse2.Y + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
-            line.HorizontalAlignment = HorizontalAlignment.Center;
-            line.VerticalAlignment = VerticalAlignment.Center;
-            line.StrokeThickness = 2;
-            Canvas.SetZIndex(line, 0);
-            drawCanvas.Children.Add(line);
+        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2) {
+            DynamicLine line = new DynamicLine(ellipse1,ellipse2);
+            Canvas.SetZIndex(line.line, 0);
+            drawCanvas.Children.Add(line.line);
         }
     }
 }
