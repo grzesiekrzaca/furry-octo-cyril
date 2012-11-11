@@ -17,46 +17,54 @@ namespace KruskallRSTP {
     /// Interaction logic for Window1.xaml
     /// </summary>
     public partial class Window1 : Window {
-        public static int CIRCLE_MARGIN = 30;
+        private static int CIRCLE_MARGIN = 30;
+        private List<DynamicEllipse> ellipses;
 
         Net net = null;
         public Window1() {
             InitializeComponent();
             net = new Net();
+            ellipses = new List<DynamicEllipse>();
             bridgesListView.ItemsSource = net.Bridges;
             int count = net.Bridges.Count;
             for (int i = 0; i < count; i++) {
                 int r = 200;
                 double basePhi = 2*Math.PI/count;
-                drawCircle((int)(r*Math.Sin(basePhi*i)+r+CIRCLE_MARGIN), (int)(r*Math.Cos(basePhi*i)+r+CIRCLE_MARGIN), false);
+                drawCircle((int)(r*Math.Sin(basePhi*i)+r+CIRCLE_MARGIN), (int)(r*Math.Cos(basePhi*i)+r+CIRCLE_MARGIN), net.Bridges[i]);
+            }
+            foreach (DynamicEllipse ellipse1 in ellipses) {
+                foreach (DynamicEllipse ellipse2 in ellipses) {
+                    if (ellipse1 != ellipse2) {
+                        drawLine(ellipse1, ellipse2, false);
+                    }
+                }
             }
         }
 
-        public void drawCircle(int positionX, int positionY, bool isActiove) {
+        private void drawCircle(int positionX, int positionY, Bridge bridge) {
             // Create a red Ellipse.
-            Ellipse ellipse = new Ellipse();
-
-            // Set the width and height of the Ellipse.
-            ellipse.Width = 20;
-            ellipse.Height = 20;
-
-            //// Create a SolidColorBrush with a red color to fill the  // Ellipse with.
-            SolidColorBrush solidColorBrush = new SolidColorBrush();
-
-            //// Describes the brush's color using RGB values.  // Each value has a range of 0-255.
-            if (isActiove) {
-                solidColorBrush.Color = Color.FromArgb(255, 255, 255, 0);
-            } else {
-                solidColorBrush.Color = Color.FromArgb(255, 180, 180, 180);
-            }
-            ellipse.Fill = solidColorBrush;
-            ellipse.StrokeThickness = 2;
-            ellipse.Stroke = Brushes.Black;
+            DynamicEllipse ellipse = new DynamicEllipse(bridge);
+            ellipses.Add(ellipse);
 
             // Add the Ellipse to the StackPanel.
-            Canvas.SetLeft(ellipse, positionX);
-            Canvas.SetTop(ellipse, positionY);
-            drawCanvas.Children.Add(ellipse);
+            Canvas.SetLeft(ellipse.ellipse, ellipse.X = positionX);
+            Canvas.SetTop(ellipse.ellipse, ellipse.Y = positionY);
+            Canvas.SetZIndex(ellipse.ellipse, 1);
+            drawCanvas.Children.Add(ellipse.ellipse);
+        }
+
+        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2, bool isEnabled) {
+            Line line = new Line();
+            line.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+            line.X1 = ellipse1.X + (int)(DynamicEllipse.ELLIPSE_DIMM/2);
+            line.X2 = ellipse2.X + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
+            line.Y1 = ellipse1.Y + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
+            line.Y2 = ellipse2.Y + (int)(DynamicEllipse.ELLIPSE_DIMM / 2);
+            line.HorizontalAlignment = HorizontalAlignment.Center;
+            line.VerticalAlignment = VerticalAlignment.Center;
+            line.StrokeThickness = 2;
+            Canvas.SetZIndex(line, 0);
+            drawCanvas.Children.Add(line);
         }
     }
 }
