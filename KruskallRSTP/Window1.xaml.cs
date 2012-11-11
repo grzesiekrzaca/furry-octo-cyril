@@ -35,7 +35,7 @@ namespace KruskallRSTP {
             foreach (DynamicEllipse ellipse1 in ellipses) {
                 foreach (DynamicEllipse ellipse2 in ellipses) {
                     if (ellipse1 != ellipse2) {
-                        drawLine(ellipse1, ellipse2);
+                        drawLine(ellipse1, ellipse2, ellipse1.GetHashCode() < ellipse2.GetHashCode());
                     }
                 }
             }
@@ -53,8 +53,8 @@ namespace KruskallRSTP {
             drawCanvas.Children.Add(ellipse.ellipse);
         }
 
-        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2) {
-            DynamicLine line = new DynamicLine(ellipse1,ellipse2);
+        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2, bool isEnabled) {
+            DynamicLine line = new DynamicLine(ellipse1,ellipse2, isEnabled);
             Canvas.SetZIndex(line.line, 0);
             drawCanvas.Children.Add(line.line);
         }
