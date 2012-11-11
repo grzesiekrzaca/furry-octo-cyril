@@ -5,7 +5,7 @@ using System.Text;
 
 namespace KruskallRSTP {
     class Net {
-        private readonly int NUMBER_OF_BRIDGES = 20;
+        private readonly int NUMBER_OF_BRIDGES = 10;
         public List<Bridge> Bridges { get; private set; }
 
         public Net(){

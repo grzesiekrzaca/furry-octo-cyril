@@ -5,16 +5,19 @@ using System.Text;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace KruskallRSTP {
     class DynamicEllipse{
         public static int ELLIPSE_DIMM = 20;
         public Ellipse ellipse{get; set;}
+        private Bridge bridge;
         public int X{get;set;}
         public int Y{get;set;}
 
         public DynamicEllipse(Bridge bridge) {
             ellipse = new Ellipse();
+            this.bridge = bridge;
 
             // Set the width and height of the Ellipse.
             ellipse.Width = ELLIPSE_DIMM;
@@ -27,12 +30,18 @@ namespace KruskallRSTP {
             ellipse.StrokeThickness = 2;
             ellipse.Stroke = Brushes.Black;
 
+            ellipse.MouseDown += switchEnability;
+
             bridge.PropertyChanged += new PropertyChangedEventHandler(sc_PropertyChanged);
 
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             fillElipse(((Bridge)sender).isEnabled);
+        }
+
+        private void switchEnability(object sender, MouseButtonEventArgs e) {
+            bridge.isEnabled = !bridge.isEnabled;
         }
 
         private void fillElipse(bool isEnabled) {
