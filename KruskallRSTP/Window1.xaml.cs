@@ -43,13 +43,13 @@ namespace KruskallRSTP {
 
         private void drawCircle(int positionX, int positionY, Bridge bridge) {
             // Create a red Ellipse.
-            DynamicEllipse ellipse = new DynamicEllipse(bridge);
+            DynamicEllipse ellipse = new DynamicEllipse(bridge, drawCanvas);
             ellipses.Add(ellipse);
 
             // Add the Ellipse to the StackPanel.
-            Canvas.SetLeft(ellipse.ellipse, ellipse.X = positionX);
-            Canvas.SetTop(ellipse.ellipse, ellipse.Y = positionY);
-            Canvas.SetZIndex(ellipse.ellipse, 1);
+            ellipse.X = positionX;
+            ellipse.Y = positionY;
+            
             drawCanvas.Children.Add(ellipse.ellipse);
         }
 

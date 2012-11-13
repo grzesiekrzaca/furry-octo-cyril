@@ -6,16 +6,40 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace KruskallRSTP {
-    class DynamicEllipse{
+    class DynamicEllipse : INotifyPropertyChanged {
         public static int ELLIPSE_DIMM = 20;
-        public Ellipse ellipse{get; set;}
-        private Bridge bridge;
-        public int X{get;set;}
-        public int Y{get;set;}
+        public Ellipse ellipse { get; set; }
+        public Bridge bridge { get; private set; }
+        private int _X;
+        public int X {
+            get{
+                return _X;
+            }
+            set{
+                _X = value > 0 ? value : 0 ;
+                Canvas.SetLeft(ellipse, _X - ELLIPSE_DIMM / 2);
+                SendPropertyChanged("X");
+            }
+        }
+        private int _Y;
+        public int Y {
+            get {
+                return _Y;
+            }
+            set {
+                _Y = value > 0 ? value : 0;
+                Canvas.SetTop(ellipse, _Y - ELLIPSE_DIMM / 2);
+                SendPropertyChanged("Y");
+            }
+        }
+        
+        private Canvas canvas;
 
-        public DynamicEllipse(Bridge bridge) {
+        public DynamicEllipse(Bridge bridge, Canvas canvas) {
+            this.canvas = canvas;
             ellipse = new Ellipse();
             this.bridge = bridge;
 
@@ -30,18 +54,41 @@ namespace KruskallRSTP {
             ellipse.StrokeThickness = 2;
             ellipse.Stroke = Brushes.Black;
 
-            ellipse.MouseDown += switchEnability;
+            ellipse.MouseLeftButtonDown += switchEnability;
+            
+            ellipse.MouseRightButtonDown += startMoving;
+            ellipse.MouseRightButtonUp += endMoving;
 
             bridge.PropertyChanged += new PropertyChangedEventHandler(sc_PropertyChanged);
-
+            Canvas.SetZIndex(ellipse, 1);
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             fillElipse(((Bridge)sender).isEnabled);
+            SendPropertyChanged("isEnabled");
         }
 
         private void switchEnability(object sender, MouseButtonEventArgs e) {
             bridge.isEnabled = !bridge.isEnabled;
+        }
+
+        private void startMoving(object sender, MouseButtonEventArgs e) {
+            ellipse.CaptureMouse();
+            ellipse.MouseMove += moveEllipse;
+        }
+
+        private void endMoving(object sender, MouseButtonEventArgs e) {
+            ellipse.ReleaseMouseCapture();
+            ellipse.MouseMove -= moveEllipse;
+        }
+
+        private void moveEllipse(object sender, MouseEventArgs e) {
+            if (e.RightButton == MouseButtonState.Pressed) {
+                System.Windows.Point p = e.GetPosition(canvas);
+                X = (int)p.X;
+                Y = (int)p.Y;
+            }
+
         }
 
         private void fillElipse(bool isEnabled) {
@@ -54,5 +101,15 @@ namespace KruskallRSTP {
             }
             ellipse.Fill = solidColorBrush;
         }
+
+        private void SendPropertyChanged(string property) {
+            if (this.PropertyChanged != null) {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }
