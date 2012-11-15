@@ -10,6 +10,7 @@ namespace KruskallRSTP {
         public List<Bridge> Bridges { get; private set; }
 
         public Net() {
+            Random random = new Random();
             Bridges = new List<Bridge>();
             Port port = null;
             for (int i = 0; i < NUMBER_OF_BRIDGES; i++) {
@@ -20,6 +21,8 @@ namespace KruskallRSTP {
                     } else {
                         port = new Port(new MAC(0, i, j), null, 0);
                     }
+                    bool kozaa =  (random.Next(0,2) == 1);
+                    port.isEnabled = kozaa;
                     ports.Add(port);
                 }
                 Bridge bridge = new Bridge(i, ports);

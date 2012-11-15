@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace KruskallRSTP {
-    class Port {
+    class Port : INotifyPropertyChanged {
         public MAC mac { get; private set; }
 
         private Port _destinationPort;
@@ -32,8 +33,8 @@ namespace KruskallRSTP {
         }
 
         public int time { get; private set; }
-        
-        private bool _isEnabled = false;
+
+        private bool _isEnabled;
         public bool isEnabled {
             get {
                 return _isEnabled;
@@ -44,7 +45,10 @@ namespace KruskallRSTP {
                 }
 
                 _isEnabled = value;
-                destinationPort.isEnabled = value;
+                if (destinationPort != null) {
+                    destinationPort.isEnabled = value;
+                }
+                SendPropertyChanged("isEnabled");
             }
         }
         
@@ -57,8 +61,10 @@ namespace KruskallRSTP {
                 this.time = time;
                 destinationPort.destinationPort = this;
                 destinationPort.time = time;
+                isEnabled = true;
             } else {
                 this.time = int.MaxValue;
+                isEnabled = false;
             }
 
             bpdus = new Queue<BPDU>();
@@ -78,5 +84,14 @@ namespace KruskallRSTP {
             return bpdus.Dequeue();
         }
 
+        private void SendPropertyChanged(string property) {
+            if (this.PropertyChanged != null) {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

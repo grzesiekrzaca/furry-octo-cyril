@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace KruskallRSTP {
     class Kruskall {
@@ -31,16 +32,16 @@ namespace KruskallRSTP {
                 if (tripple.First.destinationPort == null) {
                     continue;
                 }
-                Vertex vertex = null;
+                Tripple<Port, Vertex, bool> tripple3 = null;
                 foreach (Tripple<Port, Vertex, bool> tripple2 in edgeGeneratorList) {
                     if (tripple2.First.Equals(tripple.First.destinationPort)) {
-                        vertex = tripple2.Second;
+                        tripple3 = tripple2;
                         tripple2.Third = true;
                         break;
                     }
                 }
 
-                edges.Add(new Edge(tripple.Second, vertex, tripple.First.time));
+                edges.Add(new Edge(tripple, tripple3, tripple.First.time));
                 tripple.Third = true;
             }
         }
@@ -66,19 +67,54 @@ namespace KruskallRSTP {
             }
         }
 
-        private class Edge {
+        private class Edge : IComparable{
             public Vertex v1 { get; private set; }
             public Vertex v2 { get; private set; }
+            
+            private Port p1;
+            private Port p2;
+            
             public int Time { get; private set; }
+            
+            public bool isEnabled{
+                set {
+                    p1.isEnabled = value;
+                    p2.isEnabled = value; //just in case
+                }
+            }
 
-            public Edge(Vertex v1, Vertex v2, int Time) {
-                this.v1 = v1;
-                this.v2 = v2;
+            public Edge(Tripple<Port, Vertex, bool> t1, Tripple<Port, Vertex, bool> t2, int Time) {
+                this.v1 = t1.Second;
+                this.v2 = t2.Second;
+                this.p1 = t1.First;
+                this.p2 = t2.First;
                 this.Time = Time;
             }
+
+            public int CompareTo(object obj) {
+                if (!(obj is Edge)) {
+                    throw new ArgumentException(
+                       "An Edge object is required for comparison.");
+                }
+                return Time - ((Edge)obj).Time;
+            }
+
         }
 
-        List<Edge> makeKruskall(List<Edge> edges, out int totalTime) {
+        public void makeKruskall() {
+            int totalTime = 0;
+            List<Edge> treeEdges = makeKruskall(edges, out totalTime);
+            foreach (Edge edge in edges) {
+                if(treeEdges.Contains(edge)){
+                    edge.isEnabled = true;
+                } else {
+                    edge.isEnabled = false;
+                }
+            }
+            MessageBox.Show(totalTime.ToString());
+        }
+
+        private List<Edge> makeKruskall(List<Edge> edges, out int totalTime) {
             edges.Sort();
             List<Edge> forest = new List<Edge>();
             totalTime = 0;

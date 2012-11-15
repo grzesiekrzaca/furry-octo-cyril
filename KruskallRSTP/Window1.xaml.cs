@@ -68,15 +68,6 @@ namespace KruskallRSTP {
                 //edges.Add(new Edge(tripple.Second, ellipse, tripple.First.time));
                 tripple.Third = true;
             }
-
-            ////set edges
-            //foreach (DynamicEllipse ellipse1 in ellipses) {
-            //    foreach (DynamicEllipse ellipse2 in ellipses) {
-            //        if (ellipse1 != ellipse2) {
-            //            drawLine(ellipse1, ellipse2, ellipse1.GetHashCode() < ellipse2.GetHashCode());
-            //        }
-            //    }
-            //}
         }
 
         private DynamicEllipse drawCircle(int positionX, int positionY, Bridge bridge) {
@@ -95,6 +86,10 @@ namespace KruskallRSTP {
             DynamicLine line = new DynamicLine(ellipse1, port1, ellipse2, port2, isEnabled);
             Canvas.SetZIndex(line.line, 0);
             drawCanvas.Children.Add(line.line);
+        }
+
+        private void onMakeKruskallButtonClick(object sender, RoutedEventArgs e) {
+            kruskall.makeKruskall();
         }
     }
 }
