@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
 using System.Text;
 
 namespace KruskallRSTP {
@@ -8,65 +9,29 @@ namespace KruskallRSTP {
         private readonly int NUMBER_OF_BRIDGES = 10;
         public List<Bridge> Bridges { get; private set; }
 
-        public Net(){
+        public Net() {
             Bridges = new List<Bridge>();
+            Port port = null;
             for (int i = 0; i < NUMBER_OF_BRIDGES; i++) {
                 List<Port> ports = new List<Port>();
                 for (int j = 0; j < 10; j++) {
-                    ports.Add(new Port(new MAC(0, i, j), null, 0));
+                    if (j == 0) {
+                        port = new Port(new MAC(0, i, j), port, 0);
+                    } else {
+                        port = new Port(new MAC(0, i, j), null, 0);
+                    }
+                    ports.Add(port);
                 }
-                Bridges.Add(new Bridge(i, ports));
+                Bridge bridge = new Bridge(i, ports);
+                Bridges.Add(bridge);
+                bridge.PropertyChanged += sc_PropertyChanged;
             }
         }
 
-        private class TreeVertex {
-            Bridge bridge;
-            TreeVertex parent;
-
-            public TreeVertex(Bridge bridge) {
-                this.bridge = bridge;
-                parent = null;
+        void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName.Equals("isEnabled")) {
+                //ponów kruskala;
             }
-
-            public TreeVertex getRoot() {
-                if (parent != null) {
-                    return parent.getRoot();
-                }
-                return this;
-            }
-
-            public static void JoinTree(TreeVertex root1, TreeVertex root2) {
-                root1.parent = root2;
-            }
-        }
-
-        private class Edge {
-            public TreeVertex v1 { get; private set; }
-            public TreeVertex v2 { get; private set; }
-            public int Time { get; private set; }
-
-            public Edge(TreeVertex v1, TreeVertex v2, int Time) {
-                this.v1 = v1;
-                this.v2 = v2;
-                this.Time = Time;
-            }
-        }
-
-        List<Edge> Kruskall(List<Edge> edges, out int totalTime) {
-            edges.Sort();
-            List<Edge> forest = new List<Edge>();
-            totalTime = 0;
-            foreach (Edge edge in edges) {
-                TreeVertex root1 = edge.v1.getRoot();
-                TreeVertex root2 = edge.v2.getRoot();
-
-                if (!root1.Equals(root2)) {
-                    totalTime += edge.Time;
-                    TreeVertex.JoinTree(root1, root2);
-                    forest.Add(edge);
-                }
-            }
-            return forest;
         }
     }
 }
