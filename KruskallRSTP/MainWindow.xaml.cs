@@ -107,11 +107,12 @@ namespace KruskallRSTP {
                 XmlDocument xmlDocument = new XmlDocument();
                 try {
                     xmlDocument.Load(filename);
-                    net = new Net(xmlDocument);
-                    reloadViewAfterNewNet();
                 } catch (XmlException ex) {
                     MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
+                    return;
                 }
+                net = new Net(xmlDocument);
+                reloadViewAfterNewNet();
             }
         }
 
