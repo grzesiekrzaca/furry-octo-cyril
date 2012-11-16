@@ -95,11 +95,11 @@ namespace KruskallRSTP {
             if (result == true) {
                 string filename = dialog.FileName;
                 XmlDocument doc = new XmlDocument();
-                try {
-                    doc.LoadXml(filename);
-                } catch (XmlException ex) {
-                    MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
-                }
+                //try {
+                    doc.Load(filename);
+                //} catch (XmlException ex) {
+                //    MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
+                //}
             }
         }
 
