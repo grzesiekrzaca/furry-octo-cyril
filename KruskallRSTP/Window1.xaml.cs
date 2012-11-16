@@ -18,45 +18,78 @@ namespace KruskallRSTP {
     /// </summary>
     public partial class Window1 : Window {
         private static int CIRCLE_MARGIN = 30;
-        private List<DynamicEllipse> ellipses;
 
         Net net = null;
+        Kruskall kruskall = null;
         public Window1() {
             InitializeComponent();
+            
             net = new Net();
-            ellipses = new List<DynamicEllipse>();
+            kruskall = new Kruskall(net.Bridges);
+
+            //set left list
             bridgesListView.ItemsSource = net.Bridges;
+
+            //set verticesView
+            List<Tripple<Port, DynamicEllipse, bool>> edgeGeneratorList = new List<Tripple<Port, DynamicEllipse, bool>>();
+            List<DynamicEllipse> ellipses = new List<DynamicEllipse>();
             int count = net.Bridges.Count;
             for (int i = 0; i < count; i++) {
                 int r = 200;
                 double basePhi = 2*Math.PI/count;
-                drawCircle((int)(r*Math.Sin(basePhi*i)+r+CIRCLE_MARGIN), (int)(r*Math.Cos(basePhi*i)+r+CIRCLE_MARGIN), net.Bridges[i]);
-            }
-            foreach (DynamicEllipse ellipse1 in ellipses) {
-                foreach (DynamicEllipse ellipse2 in ellipses) {
-                    if (ellipse1 != ellipse2) {
-                        drawLine(ellipse1, ellipse2, ellipse1.GetHashCode() < ellipse2.GetHashCode());
-                    }
+                Bridge bridge = net.Bridges[i];
+                DynamicEllipse ellipse = drawCircle((int)(r * Math.Sin(basePhi * i) + r + CIRCLE_MARGIN),
+                                             (int)(r * Math.Cos(basePhi * i) + r + CIRCLE_MARGIN),
+                                             bridge);
+                ellipses.Add(ellipse);
+                foreach (Port port in bridge.ports) {
+                    edgeGeneratorList.Add(new Tripple<Port, DynamicEllipse, bool>(port, ellipse, false));
                 }
             }
+
+            //set edgesView
+            foreach (Tripple<Port, DynamicEllipse, bool> tripple in edgeGeneratorList) {
+                if (tripple.Third) {
+                    continue;
+                }
+                if (tripple.First.destinationPort == null) {
+                    continue;
+                }
+                Tripple<Port,DynamicEllipse, bool> tripple3 = null;
+                foreach (Tripple<Port, DynamicEllipse, bool> tripple2 in edgeGeneratorList) {
+                    if (tripple2.First.Equals(tripple.First.destinationPort)) {
+                        tripple3 = tripple2;
+                        tripple2.Third = true;
+                        break;
+                    }
+                }
+
+                drawLine(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
+                //edges.Add(new Edge(tripple.Second, ellipse, tripple.First.time));
+                tripple.Third = true;
+            }
         }
 
-        private void drawCircle(int positionX, int positionY, Bridge bridge) {
+        private DynamicEllipse drawCircle(int positionX, int positionY, Bridge bridge) {
             // Create a red Ellipse.
-            DynamicEllipse ellipse = new DynamicEllipse(bridge);
-            ellipses.Add(ellipse);
-
+            DynamicEllipse ellipse = new DynamicEllipse(bridge, drawCanvas);
             // Add the Ellipse to the StackPanel.
-            Canvas.SetLeft(ellipse.ellipse, ellipse.X = positionX);
-            Canvas.SetTop(ellipse.ellipse, ellipse.Y = positionY);
-            Canvas.SetZIndex(ellipse.ellipse, 1);
+            ellipse.X = positionX;
+            ellipse.Y = positionY;
+            
             drawCanvas.Children.Add(ellipse.ellipse);
+
+            return ellipse;
         }
 
-        private void drawLine(DynamicEllipse ellipse1, DynamicEllipse ellipse2, bool isEnabled) {
-            DynamicLine line = new DynamicLine(ellipse1,ellipse2, isEnabled);
+        private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
+            DynamicLine line = new DynamicLine(ellipse1, port1, ellipse2, port2, isEnabled);
             Canvas.SetZIndex(line.line, 0);
             drawCanvas.Children.Add(line.line);
+        }
+
+        private void onMakeKruskallButtonClick(object sender, RoutedEventArgs e) {
+            kruskall.makeKruskall();
         }
     }
 }

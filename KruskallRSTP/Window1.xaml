@@ -3,20 +3,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Window1" Height="600" Width="800">
     <StackPanel Orientation="Horizontal">
-        <ListView Name="bridgesListView">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="Blue" BorderThickness="2">
-                        <StackPanel Orientation="Vertical">
+        <StackPanel>
+            <Button Height="23"
+                    Name="makeKruskalButton"
+                    Width="75"
+                    Click="onMakeKruskallButtonClick">Make Kruskal</Button>
+            <ListView Name="bridgesListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Blue" BorderThickness="2">
+                            <StackPanel Orientation="Vertical">
 
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Bridge: " />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Bridge: " />
                                 <TextBlock Text="{Binding bridgeId}" />
                                 <TextBlock Text=" Is enabled:" />
                                 <CheckBox IsChecked="{Binding isEnabled}"/>
                             </StackPanel>
 
-                            <TextBlock Text="List of ports:" />
+                                <TextBlock Text="List of ports:" />
                         
                             <ListView ItemsSource="{Binding ports}" Height="100">
                                 <ListView.ItemTemplate>
@@ -36,10 +41,11 @@
                             </ListView>
                     
                         </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
         <Canvas Name="drawCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </StackPanel>
 </Window>
