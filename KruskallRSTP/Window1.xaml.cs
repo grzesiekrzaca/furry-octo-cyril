@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace KruskallRSTP {
     /// <summary>
@@ -93,7 +94,12 @@ namespace KruskallRSTP {
             bool? result = dialog.ShowDialog();
             if (result == true) {
                 string filename = dialog.FileName;
-                MessageBox.Show(filename);
+                XmlDocument doc = new XmlDocument();
+                try {
+                    doc.LoadXml(filename);
+                } catch (XmlException ex) {
+                    MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
+                }
             }
         }
 
