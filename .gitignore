@@ -1,5 +1,4 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
-bin
 obj
 
 # mstest test results
@@ -11,3 +10,7 @@ TestResults
 /KruskallRSTP.sln
 /KruskallRSTP.suo
 /KruskallRSTP/obj/Debug/KruskallRSTP.g.resources
+/KruskallRSTP/bin/Debug/*.exe
+/KruskallRSTP/bin/Debug/*.pdb
+/KruskallRSTP/bin/Debug/*.exe
+/KruskallRSTP/bin/Release
