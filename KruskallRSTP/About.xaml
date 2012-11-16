@@ -4,7 +4,7 @@
     Title="About" Height="150" Width="400"
     ResizeMode="NoResize">
     <StackPanel>
-        <TextBlock Text="This window has every self-respecting program." FontSize="15"/>
+        <TextBlock Text="Every self-respecting program has this window." FontSize="15"/>
         <TextBlock Text="Yours sincerely," FontSize="15"/>
         <TextBlock Text="Grzesiek and Marek" FontSize="15"/>
     </StackPanel>
