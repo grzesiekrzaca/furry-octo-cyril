@@ -23,7 +23,7 @@ namespace KruskallRSTP {
         Kruskall kruskall = null;
         public Window1() {
             InitializeComponent();
-            
+
             net = new Net();
             kruskall = new Kruskall(net.Bridges);
 
@@ -36,7 +36,7 @@ namespace KruskallRSTP {
             int count = net.Bridges.Count;
             for (int i = 0; i < count; i++) {
                 int r = 200;
-                double basePhi = 2*Math.PI/count;
+                double basePhi = 2 * Math.PI / count;
                 Bridge bridge = net.Bridges[i];
                 DynamicEllipse ellipse = drawCircle((int)(r * Math.Sin(basePhi * i) + r + CIRCLE_MARGIN),
                                              (int)(r * Math.Cos(basePhi * i) + r + CIRCLE_MARGIN),
@@ -55,7 +55,7 @@ namespace KruskallRSTP {
                 if (tripple.First.destinationPort == null) {
                     continue;
                 }
-                Tripple<Port,DynamicEllipse, bool> tripple3 = null;
+                Tripple<Port, DynamicEllipse, bool> tripple3 = null;
                 foreach (Tripple<Port, DynamicEllipse, bool> tripple2 in edgeGeneratorList) {
                     if (tripple2.First.Equals(tripple.First.destinationPort)) {
                         tripple3 = tripple2;
@@ -76,7 +76,7 @@ namespace KruskallRSTP {
             // Add the Ellipse to the StackPanel.
             ellipse.X = positionX;
             ellipse.Y = positionY;
-            
+
             drawCanvas.Children.Add(ellipse.ellipse);
 
             return ellipse;
@@ -88,8 +88,22 @@ namespace KruskallRSTP {
             drawCanvas.Children.Add(line.line);
         }
 
+        private void onLoadGraphButtonClick(object sender, RoutedEventArgs e) {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            bool? result = dialog.ShowDialog();
+            if (result == true) {
+                string filename = dialog.FileName;
+                MessageBox.Show(filename);
+            }
+        }
+
+        private void onCloseButtonClick(object sender, RoutedEventArgs e) {
+            Close();
+        }
+
         private void onMakeKruskallButtonClick(object sender, RoutedEventArgs e) {
             kruskall.makeKruskall();
         }
+
     }
 }

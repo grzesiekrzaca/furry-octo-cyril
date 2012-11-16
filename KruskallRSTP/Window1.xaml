@@ -2,12 +2,20 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Window1" Height="600" Width="800">
-    <StackPanel Orientation="Horizontal">
-        <StackPanel>
-            <Button Height="23"
-                    Name="makeKruskalButton"
-                    Width="75"
-                    Click="onMakeKruskallButtonClick">Make Kruskal</Button>
+    <StackPanel Orientation="Vertical">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Load Graph" Click="onLoadGraphButtonClick"/>
+                    <MenuItem Header="Save Tree"/>
+                    <MenuItem Header="Close" Click="onCloseButtonClick"/>
+                </MenuItem>
+                <MenuItem Header="Kruskall" Click="onMakeKruskallButtonClick" />
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
+
+        <StackPanel Orientation="Horizontal">
             <ListView Name="bridgesListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -39,13 +47,12 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                    
                         </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Canvas Name="drawCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </StackPanel>
-        <Canvas Name="drawCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </StackPanel>
 </Window>
