@@ -6,7 +6,9 @@ using System.ComponentModel;
 
 namespace KruskallRSTP {
     class Bridge : INotifyPropertyChanged {
-        public int bridgeId {get; private set;}
+        public String bridgeId {get; private set;}
+        public double xPosition { get; private set; }
+        public double yPosition { get; private set; }
         private bool _isEnabled;
         public bool isEnabled {
             get{
@@ -23,10 +25,12 @@ namespace KruskallRSTP {
         }
         public List<Port> ports { get; private set; }
 
-        public Bridge(int bridgeId, List<Port> ports) {
+        public Bridge(String bridgeId, double xPosition, double yPostition, List<Port> ports) {
             this.ports = ports;
             this.bridgeId = bridgeId;
             this.ports = ports;
+            this.xPosition = xPosition;
+            this.yPosition = yPosition;
             this.isEnabled = false;
         }
 

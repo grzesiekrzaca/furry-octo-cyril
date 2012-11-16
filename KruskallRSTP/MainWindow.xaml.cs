@@ -15,30 +15,51 @@ using System.Xml;
 
 namespace KruskallRSTP {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Window1 : Window {
+    public partial class MainWindow : Window {
         private static int CIRCLE_MARGIN = 30;
 
         Net net = null;
         Kruskall kruskall = null;
-        public Window1() {
+        public MainWindow() {
             InitializeComponent();
 
-            net = new Net();
-            kruskall = new Kruskall(net.Bridges);
+            createRandomNet();
+        }
 
+        private DynamicEllipse drawCircle(int positionX, int positionY, Bridge bridge) {
+            // Create a red Ellipse.
+            DynamicEllipse ellipse = new DynamicEllipse(bridge, drawCanvas);
+            // Add the Ellipse to the StackPanel.
+            ellipse.X = positionX;
+            ellipse.Y = positionY;
+
+            drawCanvas.Children.Add(ellipse.ellipse);
+
+            return ellipse;
+        }
+
+        private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
+            DynamicLine line = new DynamicLine(ellipse1, port1, ellipse2, port2, isEnabled);
+            Canvas.SetZIndex(line.line, 0);
+            drawCanvas.Children.Add(line.line);
+        }
+
+        private void reloadViewAfterNewNet() {
             //set left list
-            bridgesListView.ItemsSource = net.Bridges;
+            bridgesListView.ItemsSource = net.bridges;
+            //clear canvas
+            drawCanvas.Children.Clear();
 
             //set verticesView
             List<Tripple<Port, DynamicEllipse, bool>> edgeGeneratorList = new List<Tripple<Port, DynamicEllipse, bool>>();
             List<DynamicEllipse> ellipses = new List<DynamicEllipse>();
-            int count = net.Bridges.Count;
+            int count = net.bridges.Count;
             for (int i = 0; i < count; i++) {
                 int r = 200;
                 double basePhi = 2 * Math.PI / count;
-                Bridge bridge = net.Bridges[i];
+                Bridge bridge = net.bridges[i];
                 DynamicEllipse ellipse = drawCircle((int)(r * Math.Sin(basePhi * i) + r + CIRCLE_MARGIN),
                                              (int)(r * Math.Cos(basePhi * i) + r + CIRCLE_MARGIN),
                                              bridge);
@@ -71,35 +92,26 @@ namespace KruskallRSTP {
             }
         }
 
-        private DynamicEllipse drawCircle(int positionX, int positionY, Bridge bridge) {
-            // Create a red Ellipse.
-            DynamicEllipse ellipse = new DynamicEllipse(bridge, drawCanvas);
-            // Add the Ellipse to the StackPanel.
-            ellipse.X = positionX;
-            ellipse.Y = positionY;
-
-            drawCanvas.Children.Add(ellipse.ellipse);
-
-            return ellipse;
+        private void createRandomNet() {
+            net = new Net();
+            kruskall = new Kruskall(net.bridges);
+            reloadViewAfterNewNet();
         }
 
-        private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
-            DynamicLine line = new DynamicLine(ellipse1, port1, ellipse2, port2, isEnabled);
-            Canvas.SetZIndex(line.line, 0);
-            drawCanvas.Children.Add(line.line);
-        }
 
         private void onLoadGraphButtonClick(object sender, RoutedEventArgs e) {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
             bool? result = dialog.ShowDialog();
             if (result == true) {
                 string filename = dialog.FileName;
-                XmlDocument doc = new XmlDocument();
-                //try {
-                    doc.Load(filename);
-                //} catch (XmlException ex) {
-                //    MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
-                //}
+                XmlDocument xmlDocument = new XmlDocument();
+                try {
+                    xmlDocument.Load(filename);
+                    net = new Net(xmlDocument);
+                    reloadViewAfterNewNet();
+                } catch (XmlException ex) {
+                    MessageBox.Show("Invalid XML file!!!!\n\n\n" + ex.ToString());
+                }
             }
         }
 
@@ -111,5 +123,9 @@ namespace KruskallRSTP {
             kruskall.makeKruskall();
         }
 
+        private void onAboutButtonClick(object sender, RoutedEventArgs e) {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
+        }
     }
 }
