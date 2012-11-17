@@ -36,6 +36,7 @@ namespace KruskallRSTP {
             ellipse.Y = positionY;
 
             drawCanvas.Children.Add(ellipse.ellipse);
+            drawCanvas.Children.Add(ellipse.textBlock);
 
             return ellipse;
         }
@@ -43,7 +44,9 @@ namespace KruskallRSTP {
         private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
             DynamicLine line = new DynamicLine(ellipse1, port1, ellipse2, port2, isEnabled);
             Canvas.SetZIndex(line.line, 0);
+            Canvas.SetZIndex(line.textBlock, 0);
             drawCanvas.Children.Add(line.line);
+            drawCanvas.Children.Add(line.textBlock);
         }
 
         private void reloadViewAfterNewNet() {

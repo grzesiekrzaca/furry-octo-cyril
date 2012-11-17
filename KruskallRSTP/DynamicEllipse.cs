@@ -7,31 +7,35 @@ using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace KruskallRSTP {
     class DynamicEllipse : INotifyPropertyChanged {
         public static int ELLIPSE_DIMM = 20;
         public Ellipse ellipse { get; set; }
+        public TextBlock textBlock { get; set; }
         public Bridge bridge { get; private set; }
-        private int _X;
-        public int X {
+        private double _X;
+        public double X {
             get{
                 return _X;
             }
             set{
                 _X = value > 0 ? value : 0 ;
                 Canvas.SetLeft(ellipse, _X - ELLIPSE_DIMM / 2);
+                Canvas.SetLeft(textBlock, _X - textBlock.Text.Length*textBlock.FontSize/4);
                 SendPropertyChanged("X");
             }
         }
-        private int _Y;
-        public int Y {
+        private double _Y;
+        public double Y {
             get {
                 return _Y;
             }
             set {
                 _Y = value > 0 ? value : 0;
                 Canvas.SetTop(ellipse, _Y - ELLIPSE_DIMM / 2);
+                Canvas.SetTop(textBlock, _Y - ELLIPSE_DIMM - 2);
                 SendPropertyChanged("Y");
             }
         }
@@ -41,6 +45,9 @@ namespace KruskallRSTP {
         public DynamicEllipse(Bridge bridge, Canvas canvas) {
             this.canvas = canvas;
             ellipse = new Ellipse();
+            textBlock = new TextBlock();
+            textBlock.FontSize = 12;
+            textBlock.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.bridge = bridge;
 
             // Set the width and height of the Ellipse.
@@ -61,6 +68,9 @@ namespace KruskallRSTP {
 
             bridge.PropertyChanged += new PropertyChangedEventHandler(sc_PropertyChanged);
             Canvas.SetZIndex(ellipse, 1);
+
+            textBlock.Text = bridge.bridgeId;
+            Canvas.SetZIndex(textBlock, 1);
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {

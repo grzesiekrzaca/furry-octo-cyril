@@ -32,7 +32,7 @@ namespace KruskallRSTP {
                     port.isEnabled = kozaa;
                     ports.Add(port);
                 }
-                Bridge bridge = new Bridge(i.ToString(), i, i, ports);
+                Bridge bridge = new Bridge("Andzia"+i.ToString(), i, i, ports);
                 bridges.Add(bridge);
                 bridge.PropertyChanged += sc_PropertyChanged;
             }
