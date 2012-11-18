@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace KruskallRSTP {
     class Net {
@@ -40,6 +40,42 @@ namespace KruskallRSTP {
 
         public Net(XmlDocument xmlDocument) {
             bridges = new List<Bridge>();
+            XmlNodeList list = xmlDocument.SelectNodes("network/networkStructure/nodes/node");
+            foreach (XmlNode node in list) {
+                String bridgeId = node.Attributes["id"].Value.ToString();
+                double postionX  = 0;//= Convert.ToDouble(node.SelectSingleNode("coordinates/x").InnerText);
+                double postionY = 0;//= Convert.ToDouble(node.SelectSingleNode("coordinates/y").InnerText);
+                Bridge bridge = new Bridge(bridgeId, postionX, postionY, new List<Port>());
+                bridges.Add(bridge);
+            }
+            list = xmlDocument.SelectNodes("network/networkStructure/links/link");
+            int i = 1;
+            foreach (XmlNode link in list) {
+                String bridgeId1 = link.SelectSingleNode("source").InnerText;
+                String bridgeId2 = link.SelectSingleNode("target").InnerText;
+                //tutaj można jesszcze ekstra zabezpieczać przed złymi xmlami
+                //że jest target a dest nie znaleziony itp
+                if (bridgeId1 != null && bridgeId2 != null) {
+                    Port port1 = new Port(new MAC(0,i, i+1),
+                                          null,
+                                          0);
+                    Port port2 = new Port(new MAC(0,i+1,i++),
+                                          port1,
+                                          0);
+                    foreach(Bridge bridge in bridges){
+                        if (bridgeId1.Equals(bridge.bridgeId)) {
+                            bridge.ports.Add(port1);
+                            break;
+                        }
+                    }
+                    foreach (Bridge bridge in bridges) {
+                        if (bridgeId2.Equals(bridge.bridgeId)) {
+                            bridge.ports.Add(port2);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {

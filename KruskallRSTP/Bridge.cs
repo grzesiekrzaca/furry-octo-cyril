@@ -23,7 +23,7 @@ namespace KruskallRSTP {
                 SendPropertyChanged("isEnabled"); 
             } 
         }
-        public List<Port> ports { get; private set; }
+        public List<Port> ports { get; set; }
 
         public Bridge(String bridgeId, double xPosition, double yPostition, List<Port> ports) {
             this.ports = ports;

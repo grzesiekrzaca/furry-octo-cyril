@@ -125,8 +125,8 @@ namespace KruskallRSTP {
             double b = x >= 0 ? x : 0;
             double c = y < 0 ? -y : 0;
             double d = y >= 0 ? y : 0;
-            Color c1 = isEnabled1 ? Color.FromArgb(255, 255, 70, 70) : Color.FromArgb(255, 0, 0, 255);
-            Color c2 = isEnabled2 ? Color.FromArgb(255, 255, 70, 70) : Color.FromArgb(255, 0, 0, 255);
+            Color c1 = isEnabled1 ? Color.FromArgb(255, 0, 0, 255) : Color.FromArgb(255, 255, 70, 70);
+            Color c2 = isEnabled2 ? Color.FromArgb(255, 0, 0, 255) : Color.FromArgb(255, 255, 70, 70);
             Brush aGradientBrush = new LinearGradientBrush(c1, c2, new Point(a, c), new Point(b, d));
             line.Stroke = aGradientBrush;
             line.StrokeThickness = 5;

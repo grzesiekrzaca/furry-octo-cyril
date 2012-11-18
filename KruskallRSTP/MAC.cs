@@ -15,7 +15,7 @@ namespace KruskallRSTP {
         }
 
         public override string ToString() {
-            return first.ToString("0000") + ":" + second.ToString("0000") + ":" + third.ToString("0000");
+            return second.ToString("x6") + ":" + third.ToString("x6");
         }
     }
 }

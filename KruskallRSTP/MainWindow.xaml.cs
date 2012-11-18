@@ -115,6 +115,7 @@ namespace KruskallRSTP {
                     return;
                 }
                 net = new Net(xmlDocument);
+                kruskall = new Kruskall(net.bridges);
                 reloadViewAfterNewNet();
             }
         }
