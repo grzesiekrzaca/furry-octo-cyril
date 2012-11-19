@@ -64,18 +64,41 @@ namespace KruskallRSTP {
             List<Tripple<Port, DynamicEllipse, bool>> edgeGeneratorList = new List<Tripple<Port, DynamicEllipse, bool>>();
             List<DynamicEllipse> ellipses = new List<DynamicEllipse>();
             int count = net.bridges.Count;
+            //for (int i = 0; i < count; i++) {
+            //    int r = 200;
+            //    double basePhi = 2 * Math.PI / count;
+            //    Bridge bridge = net.bridges[i];
+            //    DynamicEllipse ellipse = drawCircle((int)(r * Math.Sin(basePhi * i) + r + CIRCLE_MARGIN),
+            //                                 (int)(r * Math.Cos(basePhi * i) + r + CIRCLE_MARGIN),
+            //                                 bridge);
+            //    ellipses.Add(ellipse);
+            //    foreach (Port port in bridge.ports) {
+            //        edgeGeneratorList.Add(new Tripple<Port, DynamicEllipse, bool>(port, ellipse, false));
+            //    }
+            //}
+            double minX = Double.MaxValue;
+            double minY = Double.MaxValue;
+            double maxX = Double.MinValue;
+            double maxY = Double.MinValue;
+            foreach (Bridge bridge in net.bridges) {
+                minX = Math.Min(minX, bridge.xPosition);
+                minY = Math.Min(minY, bridge.yPosition);
+                maxX = Math.Max(maxX, bridge.xPosition);
+                maxY = Math.Max(maxY, bridge.yPosition);
+            }
+
             for (int i = 0; i < count; i++) {
-                int r = 200;
-                double basePhi = 2 * Math.PI / count;
                 Bridge bridge = net.bridges[i];
-                DynamicEllipse ellipse = drawCircle((int)(r * Math.Sin(basePhi * i) + r + CIRCLE_MARGIN),
-                                             (int)(r * Math.Cos(basePhi * i) + r + CIRCLE_MARGIN),
-                                             bridge);
+                int xpos = (int)(400 * (bridge.xPosition - minX) / (maxX - minX));
+                int ypos = (int)(400 * (bridge.yPosition - minY) / (maxY - minY));
+                DynamicEllipse ellipse = drawCircle(xpos + CIRCLE_MARGIN, ypos + CIRCLE_MARGIN, bridge);
                 ellipses.Add(ellipse);
                 foreach (Port port in bridge.ports) {
                     edgeGeneratorList.Add(new Tripple<Port, DynamicEllipse, bool>(port, ellipse, false));
                 }
             }
+
+
 
             //set edgesView
             foreach (Tripple<Port, DynamicEllipse, bool> tripple in edgeGeneratorList) {

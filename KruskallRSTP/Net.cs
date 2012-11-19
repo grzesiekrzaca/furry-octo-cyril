@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using System.Globalization;
 
 namespace KruskallRSTP {
     class Net {
@@ -36,12 +37,14 @@ namespace KruskallRSTP {
         }
 
         public Net(XmlDocument xmlDocument) {
+            // always use dot separator for doubles
+            CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
             bridges = new List<Bridge>();
             XmlNodeList list = xmlDocument.SelectNodes("network/networkStructure/nodes/node");
             foreach (XmlNode node in list) {
                 String bridgeId = node.Attributes["id"].Value.ToString();
-                double postionX  = 0;//= Convert.ToDouble(node.SelectSingleNode("coordinates/x").InnerText);
-                double postionY = 0;//= Convert.ToDouble(node.SelectSingleNode("coordinates/y").InnerText);
+                double postionX  = Convert.ToDouble(node.SelectSingleNode("coordinates/x").InnerText,enUsCulture);
+                double postionY = Convert.ToDouble(node.SelectSingleNode("coordinates/y").InnerText,enUsCulture);
                 Bridge bridge = new Bridge(bridgeId, postionX, postionY, new List<Port>());
                 bridges.Add(bridge);
             }
@@ -50,7 +53,7 @@ namespace KruskallRSTP {
             foreach (XmlNode link in list) {
                 String bridgeId1 = link.SelectSingleNode("source").InnerText;
                 String bridgeId2 = link.SelectSingleNode("target").InnerText;
-                int cost = Convert.ToInt32(link.SelectSingleNode("additionalModules/addModule/cost").InnerText.Split('.')[0]);
+                int cost = (int)Convert.ToDouble(link.SelectSingleNode("additionalModules/addModule/cost").InnerText,enUsCulture);
 
                 //tutaj można jesszcze ekstra zabezpieczać przed złymi xmlami
                 //że jest target a dest nie znaleziony itp

@@ -25,7 +25,7 @@ namespace KruskallRSTP {
         }
         public List<Port> ports { get; set; }
 
-        public Bridge(String bridgeId, double xPosition, double yPostition, List<Port> ports) {
+        public Bridge(String bridgeId, double xPosition, double yPosition, List<Port> ports) {
             this.ports = ports;
             this.bridgeId = bridgeId;
             this.ports = ports;
