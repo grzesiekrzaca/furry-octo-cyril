@@ -21,6 +21,7 @@
                     <MenuItem Header="Visualisation"/>
                 </MenuItem>
                 <MenuItem Header="About" Click="onAboutButtonClick" />
+                <MenuItem Name="minimalCost" Header="Minimal cost = 0" />
             </Menu>
         </DockPanel>
 

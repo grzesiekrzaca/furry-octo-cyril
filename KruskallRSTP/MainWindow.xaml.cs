@@ -31,6 +31,7 @@ namespace KruskallRSTP {
         private DynamicEllipse drawCircle(int positionX, int positionY, Bridge bridge) {
             // Create a red Ellipse.
             DynamicEllipse ellipse = new DynamicEllipse(bridge, drawCanvas);
+            ellipse.ellipse.MouseLeftButtonDown += onEllipseClick;
             // Add the Ellipse to the StackPanel.
             ellipse.X = positionX;
             ellipse.Y = positionY;
@@ -39,6 +40,10 @@ namespace KruskallRSTP {
             drawCanvas.Children.Add(ellipse.textBlock);
 
             return ellipse;
+        }
+
+        private void onEllipseClick(object sender, MouseButtonEventArgs e) {
+            makeKruskall();
         }
 
         private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
@@ -115,9 +120,22 @@ namespace KruskallRSTP {
                     return;
                 }
                 net = new Net(xmlDocument);
-                kruskall = new Kruskall(net.bridges);
                 reloadViewAfterNewNet();
             }
+        }
+
+        private void makeKruskall() {
+            List<Bridge> enableBridges = new List<Bridge>();
+            foreach (Bridge bridge in net.bridges) {
+                foreach (Port port in bridge.ports) {
+                    port.isEnabled = false;
+                }
+                if (bridge.isEnabled) {
+                    enableBridges.Add(bridge);
+                }
+            }
+            kruskall = new Kruskall(enableBridges);
+            minimalCost.Header = "minimal cost = " + kruskall.makeKruskall().ToString();
         }
 
         private void onCloseButtonClick(object sender, RoutedEventArgs e) {
@@ -125,7 +143,7 @@ namespace KruskallRSTP {
         }
 
         private void onMakeKruskallButtonClick(object sender, RoutedEventArgs e) {
-            kruskall.makeKruskall();
+
         }
 
         private void onAboutButtonClick(object sender, RoutedEventArgs e) {

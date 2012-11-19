@@ -17,7 +17,6 @@ namespace KruskallRSTP {
          * 
          */
         public Net() {
-            Random random = new Random();
             bridges = new List<Bridge>();
             Port port = null;
             for (int i = 0; i < NUMBER_OF_BRIDGES; i++) {
@@ -28,8 +27,6 @@ namespace KruskallRSTP {
                     } else {
                         port = new Port(new MAC(0, i, j), null, 0);
                     }
-                    bool kozaa =  (random.Next(0,2) == 1);
-                    port.isEnabled = kozaa;
                     ports.Add(port);
                 }
                 Bridge bridge = new Bridge("Andzia"+i.ToString(), i, i, ports);
@@ -53,15 +50,17 @@ namespace KruskallRSTP {
             foreach (XmlNode link in list) {
                 String bridgeId1 = link.SelectSingleNode("source").InnerText;
                 String bridgeId2 = link.SelectSingleNode("target").InnerText;
+                int cost = Convert.ToInt32(link.SelectSingleNode("additionalModules/addModule/cost").InnerText.Split('.')[0]);
+
                 //tutaj można jesszcze ekstra zabezpieczać przed złymi xmlami
                 //że jest target a dest nie znaleziony itp
                 if (bridgeId1 != null && bridgeId2 != null) {
                     Port port1 = new Port(new MAC(0,i, i+1),
                                           null,
-                                          0);
+                                          cost);
                     Port port2 = new Port(new MAC(0,i+1,i++),
                                           port1,
-                                          0);
+                                          cost);
                     foreach(Bridge bridge in bridges){
                         if (bridgeId1.Equals(bridge.bridgeId)) {
                             bridge.ports.Add(port1);

@@ -40,6 +40,10 @@ namespace KruskallRSTP {
                         break;
                     }
                 }
+                //to jest porzebne przy starcie bo może się okazać że krawędź idzie w wyłącozny bridge
+                if (tripple3 == null) {
+                    continue;
+                }
 
                 edges.Add(new Edge(tripple, tripple3, tripple.First.time));
                 tripple.Third = true;
@@ -101,7 +105,7 @@ namespace KruskallRSTP {
 
         }
 
-        public void makeKruskall() {
+        public int makeKruskall() {
             int totalTime = 0;
             List<Edge> treeEdges = makeKruskall(edges, out totalTime);
             foreach (Edge edge in edges) {
@@ -111,7 +115,7 @@ namespace KruskallRSTP {
                     edge.isEnabled = false;
                 }
             }
-            MessageBox.Show(totalTime.ToString());
+            return totalTime;
         }
 
         private List<Edge> makeKruskall(List<Edge> edges, out int totalTime) {

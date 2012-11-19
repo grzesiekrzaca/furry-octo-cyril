@@ -61,7 +61,7 @@ namespace KruskallRSTP {
                 this.time = time;
                 destinationPort.destinationPort = this;
                 destinationPort.time = time;
-                isEnabled = true;
+                isEnabled = false;
             } else {
                 this.time = int.MaxValue;
                 isEnabled = false;
