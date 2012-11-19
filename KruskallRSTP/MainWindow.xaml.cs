@@ -142,8 +142,22 @@ namespace KruskallRSTP {
             Close();
         }
 
-        private void onMakeKruskallButtonClick(object sender, RoutedEventArgs e) {
+        private void onSetKruskallClick(object sender, RoutedEventArgs e) {
+            
+        }
 
+        private void onUpAllClick(object sender, RoutedEventArgs e) {
+            foreach (Bridge bridge in net.bridges) {
+                bridge.isEnabled = true;
+            }
+            makeKruskall();
+        }
+
+        private void onDownAllClick(object sender, RoutedEventArgs e) {
+            foreach (Bridge bridge in net.bridges) {
+                bridge.isEnabled = false;
+            }
+            makeKruskall();
         }
 
         private void onAboutButtonClick(object sender, RoutedEventArgs e) {

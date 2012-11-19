@@ -14,9 +14,13 @@
                     <MenuItem Header="Save Tree"/>
                     <MenuItem Header="Close" Click="onCloseButtonClick"/>
                 </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="UP all" Click="onUpAllClick"/>
+                    <MenuItem Header="DOWN all" Click="onDownAllClick"/>
+                </MenuItem>
                 <MenuItem Header="Mode">
                     <MenuItem Header="None"/>
-                    <MenuItem Header="Kruskall (God mode)" Click="onMakeKruskallButtonClick" />
+                    <MenuItem Header="Kruskall (God mode)" Click="onSetKruskallClick" />
                     <MenuItem Header="RSTP"/>
                     <MenuItem Header="Visualisation"/>
                 </MenuItem>
