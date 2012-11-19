@@ -40,20 +40,26 @@ namespace KruskallRSTP {
             // always use dot separator for doubles
             CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
             bridges = new List<Bridge>();
-            XmlNodeList list = xmlDocument.SelectNodes("network/networkStructure/nodes/node");
+            XmlNamespaceManager manager = new XmlNamespaceManager(xmlDocument.NameTable);
+            if (xmlDocument.DocumentElement.Attributes["xmlns"] != null) {
+                manager.AddNamespace("n", xmlDocument.DocumentElement.Attributes["xmlns"].Value);
+            } else {
+                manager.AddNamespace("n", "");
+            }
+            XmlNodeList list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:nodes/n:node", manager);
             foreach (XmlNode node in list) {
                 String bridgeId = node.Attributes["id"].Value.ToString();
-                double postionX  = Convert.ToDouble(node.SelectSingleNode("coordinates/x").InnerText,enUsCulture);
-                double postionY = Convert.ToDouble(node.SelectSingleNode("coordinates/y").InnerText,enUsCulture);
+                double postionX = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:x",manager).InnerText, enUsCulture);
+                double postionY = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:y",manager).InnerText, enUsCulture);
                 Bridge bridge = new Bridge(bridgeId, postionX, postionY, new List<Port>());
                 bridges.Add(bridge);
             }
-            list = xmlDocument.SelectNodes("network/networkStructure/links/link");
+            list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:links/n:link", manager);
             int i = 1;
             foreach (XmlNode link in list) {
-                String bridgeId1 = link.SelectSingleNode("source").InnerText;
-                String bridgeId2 = link.SelectSingleNode("target").InnerText;
-                int cost = (int)Convert.ToDouble(link.SelectSingleNode("additionalModules/addModule/cost").InnerText,enUsCulture);
+                String bridgeId1 = link.SelectSingleNode("n:source",manager).InnerText;
+                String bridgeId2 = link.SelectSingleNode("n:target",manager).InnerText;
+                int cost = (int)Convert.ToDouble(link.SelectSingleNode("n:additionalModules/n:addModule/n:cost",manager).InnerText, enUsCulture);
 
                 //tutaj można jesszcze ekstra zabezpieczać przed złymi xmlami
                 //że jest target a dest nie znaleziony itp
