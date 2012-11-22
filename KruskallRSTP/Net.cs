@@ -30,7 +30,7 @@ namespace KruskallRSTP {
                     }
                     ports.Add(port);
                 }
-                Bridge bridge = new Bridge("Andzia"+i.ToString(), i, i, ports);
+                Bridge bridge = new Bridge("Andzia" + i.ToString(), i, i, ports);
                 bridges.Add(bridge);
                 bridge.PropertyChanged += sc_PropertyChanged;
             }
@@ -49,28 +49,28 @@ namespace KruskallRSTP {
             XmlNodeList list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:nodes/n:node", manager);
             foreach (XmlNode node in list) {
                 String bridgeId = node.Attributes["id"].Value.ToString();
-                double postionX = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:x",manager).InnerText, enUsCulture);
-                double postionY = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:y",manager).InnerText, enUsCulture);
+                double postionX = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:x", manager).InnerText, enUsCulture);
+                double postionY = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:y", manager).InnerText, enUsCulture);
                 Bridge bridge = new Bridge(bridgeId, postionX, postionY, new List<Port>());
                 bridges.Add(bridge);
             }
             list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:links/n:link", manager);
             int i = 1;
             foreach (XmlNode link in list) {
-                String bridgeId1 = link.SelectSingleNode("n:source",manager).InnerText;
-                String bridgeId2 = link.SelectSingleNode("n:target",manager).InnerText;
-                int cost = (int)Convert.ToDouble(link.SelectSingleNode("n:additionalModules/n:addModule/n:cost",manager).InnerText, enUsCulture);
+                String bridgeId1 = link.SelectSingleNode("n:source", manager).InnerText;
+                String bridgeId2 = link.SelectSingleNode("n:target", manager).InnerText;
+                int cost = (int)Convert.ToDouble(link.SelectSingleNode("n:additionalModules/n:addModule/n:cost", manager).InnerText, enUsCulture);
 
                 //tutaj można jesszcze ekstra zabezpieczać przed złymi xmlami
                 //że jest target a dest nie znaleziony itp
                 if (bridgeId1 != null && bridgeId2 != null) {
-                    Port port1 = new Port(new MAC(0,i, i+1),
+                    Port port1 = new Port(new MAC(0, i, i + 1),
                                           null,
                                           cost);
-                    Port port2 = new Port(new MAC(0,i+1,i++),
+                    Port port2 = new Port(new MAC(0, i + 1, i++),
                                           port1,
                                           cost);
-                    foreach(Bridge bridge in bridges){
+                    foreach (Bridge bridge in bridges) {
                         if (bridgeId1.Equals(bridge.bridgeId)) {
                             bridge.ports.Add(port1);
                             break;
@@ -84,6 +84,48 @@ namespace KruskallRSTP {
                     }
                 }
             }
+        }
+
+        public void save(string filename) {
+            //CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.AppendChild(xmlDocument.CreateXmlDeclaration("1.0", null, null));
+            XmlElement network = xmlDocument.CreateElement("network");
+            network.SetAttribute("version", "1.0");
+            xmlDocument.AppendChild(network);
+            XmlElement networkStructure = xmlDocument.CreateElement("networkStructure");
+            network.AppendChild(networkStructure);
+            XmlElement nodes = xmlDocument.CreateElement("nodes");
+            nodes.SetAttribute("coordinatesType", "geographical");
+            networkStructure.AppendChild(nodes);
+
+            foreach (Bridge bridge in bridges) {
+                XmlElement node = xmlDocument.CreateElement("node");
+                node.SetAttribute("id", bridge.bridgeId);
+                nodes.AppendChild(node);
+
+                XmlElement coordinates = xmlDocument.CreateElement("coordinates");
+                node.AppendChild(coordinates);
+
+                XmlElement x = xmlDocument.CreateElement("x");
+                x.InnerText = bridge.xPosition.ToString();
+                coordinates.AppendChild(x);
+
+                XmlElement y = xmlDocument.CreateElement("y");
+                y.InnerText = bridge.yPosition.ToString();
+                coordinates.AppendChild(y);
+
+            }
+
+            XmlElement links = xmlDocument.CreateElement("links");
+            networkStructure.AppendChild(links);
+
+            
+            
+
+
+            // Save to the XML file
+            xmlDocument.Save(filename);
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {

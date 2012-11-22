@@ -10,8 +10,8 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top" Grid.Row="0">
                 <MenuItem Header="File">
-                    <MenuItem Header="Load Graph" Click="onLoadGraphButtonClick"/>
-                    <MenuItem Header="Save Tree"/>
+                    <MenuItem Header="Load Graph" Click="onLoadGraphButtonClick" />
+                    <MenuItem Header="Save Tree" Click="onSaveTreeButtonClick" />
                     <MenuItem Header="Close" Click="onCloseButtonClick"/>
                 </MenuItem>
                 <MenuItem Header="Edit">

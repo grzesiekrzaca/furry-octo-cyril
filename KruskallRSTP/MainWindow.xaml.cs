@@ -140,10 +140,10 @@ namespace KruskallRSTP {
             kruskall = new Kruskall(net.bridges);
             reloadViewAfterNewNet();
         }
-
-
+        
         private void onLoadGraphButtonClick(object sender, RoutedEventArgs e) {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Filter = "xml file|*.xml|All files|*.*";
             bool? result = dialog.ShowDialog();
             if (result == true) {
                 string filename = dialog.FileName;
@@ -156,6 +156,18 @@ namespace KruskallRSTP {
                 }
                 net = new Net(xmlDocument);
                 reloadViewAfterNewNet();
+            }
+        }
+
+        private void onSaveTreeButtonClick(object sender, RoutedEventArgs e) {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Filter = "xml file|*.xml";
+            bool? result = dialog.ShowDialog();
+            if (result == true) {
+                string filename = dialog.FileName;
+                if (net != null) {
+                    net.save(filename);
+                }
             }
         }
 
