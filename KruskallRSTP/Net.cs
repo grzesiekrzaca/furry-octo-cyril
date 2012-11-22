@@ -87,7 +87,10 @@ namespace KruskallRSTP {
         }
 
         public void save(string filename) {
-            //CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
+            // always use dot separator for doubles
+            CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
+            
+            //create base xml informations
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.AppendChild(xmlDocument.CreateXmlDeclaration("1.0", null, null));
             XmlElement network = xmlDocument.CreateElement("network");
@@ -98,8 +101,20 @@ namespace KruskallRSTP {
             XmlElement nodes = xmlDocument.CreateElement("nodes");
             nodes.SetAttribute("coordinatesType", "geographical");
             networkStructure.AppendChild(nodes);
+            XmlElement links = xmlDocument.CreateElement("links");
+            networkStructure.AppendChild(links);
 
+            List<Tripple<Port,Bridge,bool>> edgeGeneratorList = new List<Tripple<Port,Bridge,bool>>();
+
+            //create nodes
             foreach (Bridge bridge in bridges) {
+                //zapisujemy tylko włączone bridże
+                if (!bridge.isEnabled) {
+                    continue;
+                }
+                foreach (Port port in bridge.ports) {
+                    edgeGeneratorList.Add(new Tripple<Port, Bridge, bool>(port, bridge, false));
+                }
                 XmlElement node = xmlDocument.CreateElement("node");
                 node.SetAttribute("id", bridge.bridgeId);
                 nodes.AppendChild(node);
@@ -108,21 +123,62 @@ namespace KruskallRSTP {
                 node.AppendChild(coordinates);
 
                 XmlElement x = xmlDocument.CreateElement("x");
-                x.InnerText = bridge.xPosition.ToString();
+                x.InnerText = bridge.xPosition.ToString(enUsCulture);
                 coordinates.AppendChild(x);
 
                 XmlElement y = xmlDocument.CreateElement("y");
-                y.InnerText = bridge.yPosition.ToString();
+                y.InnerText = bridge.yPosition.ToString(enUsCulture);
                 coordinates.AppendChild(y);
 
             }
 
-            XmlElement links = xmlDocument.CreateElement("links");
-            networkStructure.AppendChild(links);
+            //create links
+            foreach (Tripple<Port, Bridge, bool> tripple in edgeGeneratorList) {
+                if (tripple.Third) {
+                    continue;
+                }
+                if (tripple.First.destinationPort == null) {
+                    continue;
+                }
+                //zapisujemy tylko włączone krawędzie
+                if (!tripple.First.isEnabled) {
+                    continue;
+                }
+                Tripple<Port, Bridge, bool> tripple3 = null;
+                foreach (Tripple<Port, Bridge, bool> tripple2 in edgeGeneratorList) {
+                    if (tripple2.First.Equals(tripple.First.destinationPort)) {
+                        tripple3 = tripple2;
+                        tripple2.Third = true;
+                        break;
+                    }
+                }
+                tripple.Third = true;
 
-            
-            
+                //add link
+                XmlElement link = xmlDocument.CreateElement("link");
+                //drawLine(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
+                link.SetAttribute("id", tripple.Second.bridgeId + "_" + tripple3.Second.bridgeId);
+                
+                XmlElement source = xmlDocument.CreateElement("source");
+                source.InnerText = tripple.Second.bridgeId;
+                link.AppendChild(source);
+                
+                XmlElement target = xmlDocument.CreateElement("target");
+                target.InnerText = tripple3.Second.bridgeId;
+                link.AppendChild(target);
 
+                XmlElement additionalModules = xmlDocument.CreateElement("additionalModules");
+                link.AppendChild(additionalModules);
+
+                XmlElement addModule = xmlDocument.CreateElement("addModule");
+                additionalModules.AppendChild(addModule);
+
+                XmlElement cost = xmlDocument.CreateElement("cost");
+                cost.InnerText = tripple.First.time.ToString(enUsCulture);
+                addModule.AppendChild(cost);
+                
+                links.AppendChild(link);
+            }
 
             // Save to the XML file
             xmlDocument.Save(filename);
