@@ -19,6 +19,9 @@ namespace KruskallRSTP {
     /// </summary>
     public partial class MainWindow : Window {
         private static int CIRCLE_MARGIN = 30;
+        enum Mode { None, Kruskall, RSTP };
+
+        Mode mode = Mode.None;
 
         Net net = null;
         Kruskall kruskall = null;
@@ -43,7 +46,16 @@ namespace KruskallRSTP {
         }
 
         private void onEllipseClick(object sender, MouseButtonEventArgs e) {
-            makeKruskall();
+            switch (mode) {
+                case Mode.Kruskall:
+                    makeKruskall();
+                    break;
+                case Mode.RSTP:
+                    break;
+                case Mode.None:
+                default:
+                    break;
+            }
         }
 
         private void drawLine(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled) {
@@ -158,34 +170,71 @@ namespace KruskallRSTP {
                 }
             }
             kruskall = new Kruskall(enableBridges);
-            minimalCost.Header = "minimal cost = " + kruskall.makeKruskall().ToString();
+            minimalCost.Text = "minimal cost = " + kruskall.makeKruskall().ToString();
         }
 
         private void onCloseButtonClick(object sender, RoutedEventArgs e) {
             Close();
         }
 
-        private void onSetKruskallClick(object sender, RoutedEventArgs e) {
-            
-        }
-
         private void onUpAllClick(object sender, RoutedEventArgs e) {
             foreach (Bridge bridge in net.bridges) {
                 bridge.isEnabled = true;
             }
-            makeKruskall();
+            switch (mode) {
+                case Mode.Kruskall:
+                    makeKruskall();
+                    break;
+                case Mode.RSTP:
+                    break;
+                case Mode.None:
+                default:
+                    break;
+            }
         }
 
         private void onDownAllClick(object sender, RoutedEventArgs e) {
             foreach (Bridge bridge in net.bridges) {
                 bridge.isEnabled = false;
             }
-            makeKruskall();
+            switch (mode) {
+                case Mode.Kruskall:
+                    makeKruskall();
+                    break;
+                case Mode.RSTP:
+                    break;
+                case Mode.None:
+                default:
+                    break;
+            }
         }
 
         private void onAboutButtonClick(object sender, RoutedEventArgs e) {
             AboutWindow aboutWindow = new AboutWindow();
             aboutWindow.ShowDialog();
         }
+
+        private void onChangeModeClick(object sender, RoutedEventArgs e) {
+            MenuItem item = (MenuItem)sender;
+            switch (item.Name) {
+                case "noneItem":
+                    mode = Mode.None;
+                    kruskallItem.IsChecked = false;
+                    rstpItem.IsChecked = false;
+                    break;
+                case "kruskallItem":
+                    mode = Mode.Kruskall;
+                    makeKruskall();
+                    noneItem.IsChecked = false;
+                    rstpItem.IsChecked = false;
+                    break;
+                case "rstpItem":
+                    mode = Mode.RSTP;
+                    noneItem.IsChecked = false;
+                    kruskallItem.IsChecked = false;
+                    break;
+            }
+        }
+
     }
 }

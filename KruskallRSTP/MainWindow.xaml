@@ -19,13 +19,12 @@
                     <MenuItem Header="DOWN all" Click="onDownAllClick"/>
                 </MenuItem>
                 <MenuItem Header="Mode">
-                    <MenuItem Header="None"/>
-                    <MenuItem Header="Kruskall (God mode)" Click="onSetKruskallClick" />
-                    <MenuItem Header="RSTP"/>
-                    <MenuItem Header="Visualisation"/>
+                    <MenuItem Name="noneItem" Click="onChangeModeClick" IsCheckable="True" Header="None" IsChecked="True"/>
+                    <MenuItem Name="kruskallItem" Click="onChangeModeClick" IsCheckable="True" Header="Kruskall (God mode)" />
+                    <MenuItem Name="rstpItem" Click="onChangeModeClick" IsCheckable="True" Header="RSTP"/>
                 </MenuItem>
                 <MenuItem Header="About" Click="onAboutButtonClick" />
-                <MenuItem Name="minimalCost" Header="Minimal cost = 0" />
+                <TextBlock Name="minimalCost" Text="Minimal cost = 0" />
             </Menu>
         </DockPanel>
 
