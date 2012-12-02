@@ -48,8 +48,8 @@ namespace KruskallRSTP
             Canvas.SetLeft(marker1, marker1point.X - size / 2);
             Canvas.SetTop(marker1, marker1point.Y - size / 2);
             Point marker2point = getPosition(false);
-            Canvas.SetLeft(marker2, marker1point.X - size / 2);
-            Canvas.SetTop(marker2, marker1point.Y - size / 2);
+            Canvas.SetLeft(marker2, marker2point.X - size / 2);
+            Canvas.SetTop(marker2, marker2point.Y - size / 2);
 
         }
 
