@@ -25,6 +25,7 @@
                 </MenuItem>
                 <MenuItem Header="About" Click="onAboutButtonClick" />
                 <TextBlock Name="minimalCost" Text="Minimal cost = 0" />
+                <MenuItem Header="RSTPStep" Click="onRSTPStepClick" />
             </Menu>
         </DockPanel>
 

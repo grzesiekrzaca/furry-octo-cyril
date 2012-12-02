@@ -8,6 +8,9 @@ namespace KruskallRSTP {
     class Port : INotifyPropertyChanged {
         public MAC mac { get; private set; }
 
+        public enum State {Blocking, Root, Designated}
+        public State state { get; set; }
+
         private Port _destinationPort;
         public Port destinationPort{
             get {
@@ -56,6 +59,7 @@ namespace KruskallRSTP {
 
         public Port(MAC mac, Port destinationPort, int time) {
             this.mac = mac;
+            this.state = State.Designated;
             this.destinationPort = destinationPort;
             if (destinationPort != null) {
                 this.time = time;

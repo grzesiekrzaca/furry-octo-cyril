@@ -46,12 +46,13 @@ namespace KruskallRSTP {
             } else {
                 manager.AddNamespace("n", "");
             }
+            int priority = 1;
             XmlNodeList list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:nodes/n:node", manager);
             foreach (XmlNode node in list) {
                 String bridgeId = node.Attributes["id"].Value.ToString();
                 double postionX = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:x", manager).InnerText, enUsCulture);
                 double postionY = Convert.ToDouble(node.SelectSingleNode("n:coordinates/n:y", manager).InnerText, enUsCulture);
-                Bridge bridge = new Bridge(bridgeId, postionX, postionY, new List<Port>());
+                Bridge bridge = new Bridge(bridgeId, priority++, postionX, postionY, new List<Port>());
                 bridges.Add(bridge);
             }
             list = xmlDocument.SelectNodes("//n:network/n:networkStructure/n:links/n:link", manager);

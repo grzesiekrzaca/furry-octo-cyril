@@ -66,6 +66,15 @@ namespace KruskallRSTP {
             drawCanvas.Children.Add(line.textBlock);
         }
 
+        private void drawRSTPMarker(DynamicEllipse ellipse1, Port port1, DynamicEllipse ellipse2, Port port2, bool isEnabled)
+        {
+            RSTPMarker marker = new RSTPMarker(ellipse1, port1, ellipse2, port2, isEnabled);
+            Canvas.SetZIndex(marker.marker1, 2);
+            Canvas.SetZIndex(marker.marker2, 2);
+            drawCanvas.Children.Add(marker.marker1);
+            drawCanvas.Children.Add(marker.marker2);
+        }
+
         private void reloadViewAfterNewNet() {
             //set left list
             bridgesListView.ItemsSource = net.bridges;
@@ -130,6 +139,7 @@ namespace KruskallRSTP {
                 }
 
                 drawLine(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
+                drawRSTPMarker(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
                 //edges.Add(new Edge(tripple.Second, ellipse, tripple.First.time));
                 tripple.Third = true;
             }
@@ -202,6 +212,20 @@ namespace KruskallRSTP {
                 case Mode.None:
                 default:
                     break;
+            }
+        }
+
+        private void onRSTPStepClick(object sender, RoutedEventArgs e) {
+            if (mode == Mode.RSTP)
+            {
+                foreach (Bridge bridge in net.bridges)
+                {
+                    bridge.readOnPorts();
+                }
+                foreach (Bridge bridge in net.bridges)
+                {
+                    bridge.sendToPorts();
+                }
             }
         }
 
