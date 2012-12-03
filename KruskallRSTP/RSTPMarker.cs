@@ -97,6 +97,8 @@ namespace KruskallRSTP {
 
             ellipse1.PropertyChanged += sc_PropertyChanged;
             ellipse2.PropertyChanged += sc_PropertyChanged;
+            port1.PropertyChanged += sc_PropertyChanged;
+            port2.PropertyChanged += sc_PropertyChanged;
         }
 
         void sc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
@@ -117,6 +119,15 @@ namespace KruskallRSTP {
                         Y2 = ((DynamicEllipse)sender).Y;
                     }
                 }
+            }
+            if (e.PropertyName.Equals("state"))
+            {
+                //zmienił się kolorek
+                //Queue<BPDU> bpdus;
+                //bpdus = new Queue<BPDU>();
+                //bpdus.Dequeue();
+                marker1.Fill = getColor(port1);
+                marker2.Fill = getColor(port2);
             }
             //setEnabled(port1.isEnabled, port2.isEnabled);
         }

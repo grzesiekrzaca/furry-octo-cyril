@@ -55,31 +55,36 @@ namespace KruskallRSTP {
             foreach (Port port in ports)
             {
                 BPDU bpdu = port.getBPDU();
-                int distance = port.time;
-                if (bpdu.RootIdentifier < priority)
-                {
-                    rootId = bpdu.RootIdentifier;
-                    rootCost = bpdu.RootPathCost + port.time;
-                    //znajdx stary root port i zmien go na blocking
-                    foreach (Port oldport in ports)
-                        if (oldport.state == Port.State.Root)
-                            oldport.state = Port.State.Blocking;
-                    //ustanw nowego rooat
-                    port.state = Port.State.Root;
-                } else if (bpdu.RootIdentifier == priority)
-                {
-                    if (bpdu.RootPathCost > rootCost)
-                        port.state = Port.State.Blocking;
-                    if (bpdu.RootPathCost < priority)
+                if(bpdu != null)
+                    if (bpdu.RootIdentifier < rootId)
                     {
-                        //znajdx stary root port i zmien go na blocking
+                        rootId = bpdu.RootIdentifier;
+                        rootCost = bpdu.RootPathCost + port.time;
+                        //znajdx stary root port i zmien go na designated
                         foreach (Port oldport in ports)
                             if (oldport.state == Port.State.Root)
-                                oldport.state = Port.State.Blocking;
+                                oldport.state = Port.State.Designated;
                         //ustanw nowego rooat
                         port.state = Port.State.Root;
                     }
-                }
+                    else if (bpdu.RootIdentifier == rootId)
+                    {
+                        if ((bpdu.RootPathCost + port.time) > rootCost && bpdu.RootPathCost != rootCost + port.time)
+                            port.state = Port.State.Blocking;
+                        else if (bpdu.RootPathCost == rootCost + port.time)
+                            port.state = Port.State.Designated;
+                       
+                        if ((bpdu.RootPathCost + port.time) < rootCost)
+                        {
+                            //znajdx stary root port i zmien go na designated
+                            foreach (Port oldport in ports)
+                                if (oldport.state == Port.State.Root)
+                                    oldport.state = Port.State.Designated;
+                            //ustanw nowego rooat
+                            rootCost = bpdu.RootPathCost + port.time;
+                            port.state = Port.State.Root;
+                        }
+                    }
 
             }
         }
@@ -88,6 +93,7 @@ namespace KruskallRSTP {
         {
             foreach (Port port in ports)
             {
+                //if(port.state!=Port.State.Root)
                 port.sendBPDU(new BPDU(0, 0, 0, 0, rootId, rootCost, priority, 0, 0, 0, 0, 0));
             }
         }

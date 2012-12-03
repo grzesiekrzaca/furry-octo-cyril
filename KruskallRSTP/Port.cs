@@ -9,7 +9,16 @@ namespace KruskallRSTP {
         public MAC mac { get; private set; }
 
         public enum State {Blocking, Root, Designated}
-        public State state { get; set; }
+        private State _state;
+        public State state
+        {
+            get { return _state; }
+            set
+            {
+            _state =  value;
+                SendPropertyChanged("state"); 
+            }
+        }
 
         private Port _destinationPort;
         public Port destinationPort{
@@ -85,7 +94,14 @@ namespace KruskallRSTP {
         }
 
         public BPDU getBPDU() {
-            return bpdus.Dequeue();
+            try
+            {
+                return bpdus.Dequeue();
+            }
+            catch (InvalidOperationException e)
+            {
+                return null;
+            }
         }
 
         private void SendPropertyChanged(string property) {
