@@ -16,6 +16,15 @@ namespace KruskallRSTP {
             set
             {
             _state =  value;
+            switch (value) {
+                case State.Root:
+                case State.Designated:
+                    isEnabled = true;
+                    break;
+                case State.Blocking:
+                    isEnabled = false;
+                    break;
+            }
                 SendPropertyChanged("state"); 
             }
         }
