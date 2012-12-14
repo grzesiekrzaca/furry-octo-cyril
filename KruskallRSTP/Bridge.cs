@@ -72,8 +72,18 @@ namespace KruskallRSTP {
                         if ((bpdu.RootPathCost + port.time) > rootCost && bpdu.RootPathCost != rootCost + port.time)
                             port.state = Port.State.Blocking;
                         else if (bpdu.RootPathCost == rootCost + port.time)
-                            port.state = Port.State.Designated;
-                       
+                        {
+                            if(port.destinationPort.state!=Port.State.Blocking)
+                                port.state = Port.State.Designated;
+                            else
+                                port.state = Port.State.Blocking;
+                        }
+                        else if ((bpdu.RootPathCost + port.time) == rootCost)
+                        {
+                            if(port.state!=Port.State.Root)
+                                port.state = Port.State.Blocking;
+                        }
+
                         if ((bpdu.RootPathCost + port.time) < rootCost)
                         {
                             //znajdx stary root port i zmien go na designated

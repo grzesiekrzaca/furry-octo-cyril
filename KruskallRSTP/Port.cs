@@ -18,6 +18,8 @@ namespace KruskallRSTP {
             _state =  value;
             switch (value) {
                 case State.Root:
+                    isEnabled = true;
+                    break;
                 case State.Designated:
                     isEnabled = true;
                     break;
