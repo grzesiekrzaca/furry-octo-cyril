@@ -186,7 +186,7 @@ namespace KruskallRSTP {
             List<Bridge> enableBridges = new List<Bridge>();
             foreach (Bridge bridge in net.bridges) {
                 foreach (Port port in bridge.ports) {
-                    port.isEnabled = true;
+                    port.isEnabled = false;
                 }
                 if (bridge.isEnabled) {
                     enableBridges.Add(bridge);
