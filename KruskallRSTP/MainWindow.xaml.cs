@@ -283,6 +283,7 @@ namespace KruskallRSTP {
             switch (item.Name) {
                 case "noneItem":
                     mode = Mode.None;
+                    noneItem.IsChecked = true;
                     kruskallItem.IsChecked = false;
                     rstpItem.IsChecked = false;
                     reloadViewAfterNewNet();
@@ -290,6 +291,7 @@ namespace KruskallRSTP {
                 case "kruskallItem":
                     mode = Mode.Kruskall;
                     makeKruskall();
+                    kruskallItem.IsChecked = true;
                     noneItem.IsChecked = false;
                     rstpItem.IsChecked = false;
                     reloadViewAfterNewNet();
@@ -298,6 +300,7 @@ namespace KruskallRSTP {
                     mode = Mode.RSTP;
                     noneItem.IsChecked = false;
                     kruskallItem.IsChecked = false;
+                    rstpItem.IsChecked = true;
                     reloadViewAfterNewNet();
                     break;
             }
