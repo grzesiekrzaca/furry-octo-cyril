@@ -139,6 +139,7 @@ namespace KruskallRSTP {
                 }
 
                 drawLine(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
+                if(mode == Mode.RSTP)
                 drawRSTPMarker(tripple.Second, tripple.First, tripple3.Second, tripple3.First, false);
                 //edges.Add(new Edge(tripple.Second, ellipse, tripple.First.time));
                 tripple.Third = true;
@@ -185,7 +186,7 @@ namespace KruskallRSTP {
             List<Bridge> enableBridges = new List<Bridge>();
             foreach (Bridge bridge in net.bridges) {
                 foreach (Port port in bridge.ports) {
-                    port.isEnabled = false;
+                    port.isEnabled = true;
                 }
                 if (bridge.isEnabled) {
                     enableBridges.Add(bridge);
@@ -205,9 +206,11 @@ namespace KruskallRSTP {
             }
             switch (mode) {
                 case Mode.Kruskall:
+                    
                     makeKruskall();
                     break;
                 case Mode.RSTP:
+                   
                     break;
                 case Mode.None:
                 default:
@@ -216,17 +219,42 @@ namespace KruskallRSTP {
         }
 
         private void onRSTPStepClick(object sender, RoutedEventArgs e) {
+            List<Bridge> enableBridges = new List<Bridge>();
+            foreach (Bridge bridge in net.bridges)
+            {
+                foreach (Port port in bridge.ports)
+                {
+                    port.isEnabled = false;
+                }
+                if (bridge.isEnabled)
+                {
+                    enableBridges.Add(bridge);
+                }
+            }
+            
+            
+            
             if (mode == Mode.RSTP)
             {
-                foreach (Bridge bridge in net.bridges)
+                foreach (Bridge bridge in enableBridges)
                 {
                     bridge.readOnPorts();
                 }
-                foreach (Bridge bridge in net.bridges)
+                foreach (Bridge bridge in enableBridges)
                 {
                     bridge.sendToPorts();
                 }
             }
+            //cmpt min cost
+            int cost = 0;
+            foreach (Bridge bridge in enableBridges)
+            {
+                foreach (Port port in bridge.ports)
+                    if (port.state == Port.State.Root)
+                        cost += port.time;
+            }
+            minimalCost.Text = "minimal cost = " + cost.ToString();
+
         }
 
         private void onDownAllClick(object sender, RoutedEventArgs e) {
@@ -257,17 +285,20 @@ namespace KruskallRSTP {
                     mode = Mode.None;
                     kruskallItem.IsChecked = false;
                     rstpItem.IsChecked = false;
+                    reloadViewAfterNewNet();
                     break;
                 case "kruskallItem":
                     mode = Mode.Kruskall;
                     makeKruskall();
                     noneItem.IsChecked = false;
                     rstpItem.IsChecked = false;
+                    reloadViewAfterNewNet();
                     break;
                 case "rstpItem":
                     mode = Mode.RSTP;
                     noneItem.IsChecked = false;
                     kruskallItem.IsChecked = false;
+                    reloadViewAfterNewNet();
                     break;
             }
         }
