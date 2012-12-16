@@ -22,12 +22,14 @@ namespace KruskallRSTP {
         enum Mode { None, Kruskall, RSTP };
 
         Mode mode = Mode.None;
-
+        
         Net net = null;
         Kruskall kruskall = null;
         public MainWindow() {
             InitializeComponent();
-
+            Log.destinationTextBox = logWindow;
+            Log.scrollViewer = scrollViewer;
+            logWindow.Text = "Id\tTime\t\t\tTAG\t\tMessage\n";
             createRandomNet();
         }
 

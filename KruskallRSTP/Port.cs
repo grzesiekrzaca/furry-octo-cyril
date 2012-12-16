@@ -109,7 +109,7 @@ namespace KruskallRSTP {
             {
                 return bpdus.Dequeue();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 return null;
             }

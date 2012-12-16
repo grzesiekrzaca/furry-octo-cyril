@@ -10,6 +10,8 @@ namespace KruskallRSTP {
         List<Vertex> vertices;
         List<Edge> edges;
 
+        private static String TAG = "Kruskall";
+
         public Kruskall(List<Bridge> bridges) {
             vertices = new List<Vertex>();
             edges = new List<Edge>();
@@ -69,6 +71,11 @@ namespace KruskallRSTP {
             public static void JoinTree(Vertex root1, Vertex root2) {
                 root1.parent = root2;
             }
+
+            public override string ToString()
+            {
+                return bridge.bridgeId;
+            }
         }
 
         private class Edge : IComparable{
@@ -106,6 +113,7 @@ namespace KruskallRSTP {
         }
 
         public int makeKruskall() {
+            Log.i(TAG, "Start Kruskall algorithm");
             int totalTime = 0;
             List<Edge> treeEdges = makeKruskall(edges, out totalTime);
             foreach (Edge edge in edges) {
@@ -115,6 +123,7 @@ namespace KruskallRSTP {
                     edge.isEnabled = false;
                 }
             }
+            Log.i(TAG, "Finished Kruskall algorithm with total tree weight= "+totalTime.ToString());
             return totalTime;
         }
 
@@ -129,6 +138,7 @@ namespace KruskallRSTP {
                 if (!root1.Equals(root2)) {
                     totalTime += edge.Time;
                     Vertex.JoinTree(root1, root2);
+                    Log.i(TAG, "Joining " + root1.ToString() + " and " + root2.ToString());
                     forest.Add(edge);
                 }
             }
