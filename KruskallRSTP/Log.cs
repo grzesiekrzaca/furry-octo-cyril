@@ -21,5 +21,10 @@ namespace KruskallRSTP
             scrollViewer.ScrollToEnd();
             counter++;
         }
+
+        public static void dump(string filename)
+        {
+            System.IO.File.WriteAllText(filename, destinationTextBox.Text);
+        }
     }
 }

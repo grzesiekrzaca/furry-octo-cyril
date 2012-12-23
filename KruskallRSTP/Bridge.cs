@@ -10,6 +10,7 @@ namespace KruskallRSTP {
         public double xPosition { get; private set; }
         public double yPosition { get; private set; }
         public int priority { get; private set; }
+        public string TAG = "RSTP";
 
         private int rootId;
         private int rootCost = 0;
@@ -63,25 +64,55 @@ namespace KruskallRSTP {
                         //znajdx stary root port i zmien go na designated
                         foreach (Port oldport in ports)
                             if (oldport.state == Port.State.Root)
+                            {
                                 oldport.state = Port.State.Designated;
+                                Log.i(TAG, "port " + oldport.ToString() + " chaned to " + Port.State.Designated);
+                            }
                         //ustanw nowego rooat
-                        port.state = Port.State.Root;
+                        if (port.state != Port.State.Root)
+                        {
+                            port.state = Port.State.Root;
+                            Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Root);
+                        }
                     }
                     else if (bpdu.RootIdentifier == rootId)
                     {
                         if ((bpdu.RootPathCost + port.time) > rootCost && bpdu.RootPathCost != rootCost + port.time)
-                            port.state = Port.State.Blocking;
+                        {
+                            if (port.state != Port.State.Blocking)
+                            {
+                                port.state = Port.State.Blocking;
+                                Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Blocking);
+                            }
+                        }
                         else if (bpdu.RootPathCost == rootCost + port.time)
                         {
-                            if(port.destinationPort.state!=Port.State.Blocking)
+                            if (port.destinationPort.state != Port.State.Blocking)
+                            {
+                                if (port.state != Port.State.Designated)
+                                Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Designated);
                                 port.state = Port.State.Designated;
+                                
+                            }
                             else
-                                port.state = Port.State.Blocking;
+                            {
+                                if (port.state != Port.State.Blocking)
+                                {
+                                    port.state = Port.State.Blocking;
+                                    Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Blocking);
+                                }                        
+                            }
                         }
                         else if ((bpdu.RootPathCost + port.time) == rootCost)
                         {
-                            if(port.state!=Port.State.Root)
-                                port.state = Port.State.Blocking;
+                            if (port.state != Port.State.Root)
+                            {
+                                if (port.state != Port.State.Blocking)
+                                {
+                                    port.state = Port.State.Blocking;
+                                    Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Blocking);
+                                }
+                            }
                         }
 
                         if ((bpdu.RootPathCost + port.time) < rootCost)
@@ -89,10 +120,17 @@ namespace KruskallRSTP {
                             //znajdx stary root port i zmien go na designated
                             foreach (Port oldport in ports)
                                 if (oldport.state == Port.State.Root)
+                                {
                                     oldport.state = Port.State.Designated;
+                                    Log.i(TAG, "port " + oldport.ToString() + " chaned to " + Port.State.Designated);
+                                }
                             //ustanw nowego rooat
                             rootCost = bpdu.RootPathCost + port.time;
-                            port.state = Port.State.Root;
+                            if (port.state != Port.State.Root)
+                            {
+                                port.state = Port.State.Root;
+                                Log.i(TAG, "port " + port.ToString() + " chaned to " + Port.State.Root);
+                            }   
                         }
                     }
 

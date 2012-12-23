@@ -13,6 +13,7 @@
                 <MenuItem Header="File">
                     <MenuItem Header="Load Graph" Click="onLoadGraphButtonClick" />
                     <MenuItem Header="Save Tree" Click="onSaveTreeButtonClick" />
+                    <MenuItem Header="Save Log" Click="onSaveLogButtonClick" />
                     <MenuItem Header="Close" Click="onCloseButtonClick"/>
                 </MenuItem>
                 <MenuItem Header="Edit">

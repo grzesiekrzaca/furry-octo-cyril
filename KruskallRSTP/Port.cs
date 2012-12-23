@@ -115,6 +115,12 @@ namespace KruskallRSTP {
             }
         }
 
+        public override string ToString()
+        {
+
+            return mac.ToString();
+        }
+
         private void SendPropertyChanged(string property) {
             if (this.PropertyChanged != null) {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(property));

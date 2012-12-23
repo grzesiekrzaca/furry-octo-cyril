@@ -184,6 +184,21 @@ namespace KruskallRSTP {
             }
         }
 
+        private void onSaveLogButtonClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Filter = "txt file|*.txt";
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string filename = dialog.FileName;
+                if (net != null)
+                {
+                    Log.dump(filename);
+                }
+            }
+        }
+
         private void makeKruskall() {
             List<Bridge> enableBridges = new List<Bridge>();
             foreach (Bridge bridge in net.bridges) {
